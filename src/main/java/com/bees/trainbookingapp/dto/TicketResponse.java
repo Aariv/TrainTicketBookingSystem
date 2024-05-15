@@ -12,6 +12,7 @@ public class TicketResponse
     private double pricePaid;
     private int seatNumber;
 
+    public TicketResponse() {}
     public TicketResponse( UserResponse user, String from, String to, String section, double pricePaid, int seatNumber )
     {
         this.user = user;

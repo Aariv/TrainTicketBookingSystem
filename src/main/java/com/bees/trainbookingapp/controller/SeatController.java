@@ -36,7 +36,7 @@ public class SeatController {
     }
 
     @Operation(summary = "Modify the seating", description = "REST API to modify the seating of a user")
-    @PutMapping("/user/{id}/seat")
+    @PutMapping("/user/{id}")
     public ResponseEntity<String> modifyUserSeat(@PathVariable Long id, @RequestBody UserSeatModificationDTO userSeatModificationDTO) {
         seatService.modifyUserSeat(id, userSeatModificationDTO );
         return ResponseEntity.ok("User's seat modified successfully.");

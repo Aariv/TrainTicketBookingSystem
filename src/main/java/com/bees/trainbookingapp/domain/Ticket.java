@@ -13,9 +13,11 @@ public class Ticket {
     private String from;
     @Column(name = "to_station")
     private String to;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
     private double pricePaid;
 
 }

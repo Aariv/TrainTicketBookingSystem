@@ -5,6 +5,7 @@ import com.bees.trainbookingapp.dto.TicketResponse;
 import com.bees.trainbookingapp.service.TicketService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +22,9 @@ public class TicketController {
 
     @Operation(summary = "Purchase new ticket", description = "REST API to book a new ticket for a user")
     @PostMapping("/purchase")
-    public ResponseEntity<TicketResponse> purchaseTicket( @RequestBody TicketRequest request) {
-        TicketResponse ticket = ticketService.purchaseTicket(request);
-        return ResponseEntity.ok(ticket);
+    public ResponseEntity<String> purchaseTicket( @RequestBody TicketRequest request) {
+        ticketService.purchaseTicket(request);
+        return new ResponseEntity<>( "Ticket is created successfully", HttpStatus.CREATED);
     }
 
     @Operation(summary = "Get ticket details", description = "REST API to get ticket for a user")
