@@ -22,6 +22,8 @@ public class TicketService
   @Autowired
   private TicketRepository ticketRepository;
 
+  private TrainRepository trainRepository;
+
   public TicketResponse purchaseTicket( TicketRequest ticketDTO) {
     // Check if the user already exists in the database
     User existingUser = userRepository.findByEmail( ticketDTO.getUser().getEmail());
@@ -38,6 +40,7 @@ public class TicketService
 
     // Calculate price
 //    double price = 5.0; // Fixed price for now
+    Train train = convertTrainDTOToEntity( ticketDTO.getTrain() );
 
     // Create and save the ticket
     Ticket ticket = new Ticket();
@@ -45,9 +48,18 @@ public class TicketService
     ticket.setTo(ticketDTO.getTo());
     ticket.setUser(user);
     ticket.setPricePaid(ticketDTO.getPriceToBePaid());
+    ticket.setTrain( train );
     // Save ticket to database or any other storage mechanism
     ticketRepository.save( ticket );
     return new TicketResponse( convertEntityToUserResponse( user ), ticketDTO.getFrom(), ticketDTO.getTo(), seat.getSection(), ticket.getPricePaid(), seat.getSeatNumber());
+  }
+
+  private Train convertTrainDTOToEntity( TrainDto train )
+  {
+    Train entity = new Train();
+    entity.setTrainNumber(train.getTrainNumber());
+    entity.setTrainName(train.getTrainName());
+    return entity;
   }
 
   private User convertDTOToEntity( UserRequest user )

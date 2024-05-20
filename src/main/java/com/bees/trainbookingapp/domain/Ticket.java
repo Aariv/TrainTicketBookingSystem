@@ -18,6 +18,10 @@ public class Ticket {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "train_id")
+    private Train train;
+
     private double pricePaid;
 
 }
