@@ -26,6 +26,13 @@ public class TicketService
 
   public TicketResponse purchaseTicket( TicketRequest ticketDTO) {
     // Check if the user already exists in the database
+//    if(ticketDTO.getUser() == null) {
+//      // TOOD user details mandatory
+//      throw new UserNotFoundException( "User details required" );
+//    }
+//    if(ticketDTO.getPriceToBePaid() < 0) {
+//      throw new PriceNegativeException("");
+//    }
     User existingUser = userRepository.findByEmail( ticketDTO.getUser().getEmail());
     User user;
     if(existingUser != null) {
@@ -47,7 +54,7 @@ public class TicketService
     ticket.setFrom(ticketDTO.getFrom());
     ticket.setTo(ticketDTO.getTo());
     ticket.setUser(user);
-    ticket.setPricePaid(ticketDTO.getPriceToBePaid());
+//    ticket.setPricePaid();
     ticket.setTrain( train );
     // Save ticket to database or any other storage mechanism
     ticketRepository.save( ticket );
@@ -76,10 +83,12 @@ public class TicketService
     Seat seat = seatRepository.findFirstBySectionAndUser(section, user );
     if (seat != null)
     {
-      throw new RuntimeException("Seat already taken");
+      throw new SeatNotFoundException("Seat already taken");
     }
     // If a seat is available, assign it to the user and save the updated seat information
     Seat newSeat = new Seat();
+    // TODO:- Generate a random number from 1-10 and check if the seat is available.
+    //
     newSeat.setSeatNumber( new Random().nextInt() );
     newSeat.setSection( section );
     newSeat.setUser(user);
@@ -89,18 +98,10 @@ public class TicketService
 
   public TicketResponse getReceiptDetails( Long id )
   {
-    User existingUser = userRepository.findById( id ).orElse(null);
-    if(existingUser == null) {
-      throw new UserNotFoundException( "User not found");
-    }
-    Ticket ticket = ticketRepository.findByUser( existingUser );
-    if(ticket == null) {
-      throw new TicketNotFoundException( "Ticket not found");
-    }
-    Seat seat = seatRepository.findByUser( existingUser );
-    if(seat == null) {
-      throw new SeatNotFoundException( "Seat not found");
-    }
+    User existingUser = userRepository.findById( id ).orElseThrow(() -> new UserNotFoundException("User not found"));
+    Ticket ticket = ticketRepository.findByUser( existingUser ).orElseThrow(() -> new TicketNotFoundException( "Ticket not found"));
+    Seat seat = existingUser.getSeat(); // seatRepository.findByUser( existingUser ).orElseThrow(() -> new SeatNotFoundException( "Seat not found"));
+
     return new TicketResponse( convertEntityToUserResponse( existingUser ), ticket.getFrom(), ticket.getTo(), seat.getSection(), ticket.getPricePaid(), seat.getSeatNumber());
   }
 

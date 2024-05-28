@@ -4,6 +4,7 @@ import com.bees.trainbookingapp.domain.Seat;
 import com.bees.trainbookingapp.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -15,5 +16,5 @@ public interface SeatRepository extends CrudRepository<Seat, Long>
 
   List<Seat> findBySection( String section );
 
-  Seat findByUser( User existingUser );
+  Optional<Seat> findByUser( User existingUser );
 }

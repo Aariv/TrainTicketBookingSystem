@@ -9,6 +9,7 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SeatService
@@ -48,13 +49,14 @@ public class SeatService
     return users;
   }
 
+  @Transactional
   public void removeUserFromTrain(Long id) {
     User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
     Seat seat = user.getSeat();
     if (seat != null) {
       seatRepository.delete(seat);
     }
-    Ticket ticket = ticketRepository.findByUser( user );
+    Ticket ticket = ticketRepository.findByUser( user ).orElse( null );
     if(ticket != null) {
       ticketRepository.delete(ticket);
     }

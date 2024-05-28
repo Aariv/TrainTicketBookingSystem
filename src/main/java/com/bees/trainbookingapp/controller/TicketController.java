@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag( name = "REST APIs for Ticket Booking", description = "REST APIs to purchase new tickets and get receipt details" )
 @RestController
@@ -22,7 +23,7 @@ public class TicketController {
 
     @Operation(summary = "Purchase new ticket", description = "REST API to book a new ticket for a user")
     @PostMapping("/purchase")
-    public ResponseEntity<String> purchaseTicket( @RequestBody TicketRequest request) {
+    public ResponseEntity<String> purchaseTicket( @Valid @RequestBody TicketRequest request) {
         ticketService.purchaseTicket(request);
         return new ResponseEntity<>( "Ticket is created successfully", HttpStatus.CREATED);
     }
